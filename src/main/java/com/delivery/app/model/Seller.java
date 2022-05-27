@@ -12,7 +12,7 @@ public class Seller extends Person{
     public Seller() {
     }
 
-    public Seller(Long id, String username, String password, String first_name, String last_name, String email, String phone_number) {
-        super(id, username, password, first_name, last_name, email, phone_number);
+    public Seller(Long id, String username, String password, String first_name, String last_name, String email, String phone_number,ROLE role) {
+        super(id, username, password, first_name, last_name, email, phone_number,role);
     }
 }

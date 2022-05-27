@@ -22,8 +22,8 @@ public class Delivery_man extends Person {
     public Delivery_man() {
     }
 
-    public Delivery_man(Long id, String username, String password, String first_name, String last_name, String email, String phone_number, String CIN, String delivery_vehicule, Collection<Box> pack) {
-        super(id, username, password, first_name, last_name, email, phone_number);
+    public Delivery_man(Long id, String username, String password, String first_name, String last_name, String email, String phone_number, String CIN, String delivery_vehicule, Collection<Box> pack,ROLE role) {
+        super(id, username, password, first_name, last_name, email, phone_number,role);
         this.CIN = CIN;
         Delivery_vehicule = delivery_vehicule;
         this.pack = pack;

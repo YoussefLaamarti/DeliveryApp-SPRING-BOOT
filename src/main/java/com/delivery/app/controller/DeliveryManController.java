@@ -18,7 +18,7 @@ public class DeliveryManController {
     DeliveryManRepository delivRepo;
 
 
-    //Find only Box related to this DeliveryMan
+    //Find only Box related to this DeliveryMan [DELIVERYMAN]
     @GetMapping("/delivery/id/{id}")
     public Collection<Box> pwdDelivery(@PathVariable(value = "id") long deliverytid) {
 

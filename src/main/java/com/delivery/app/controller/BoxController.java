@@ -15,6 +15,7 @@ import com.delivery.app.repository.DeliveryManRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,8 +47,9 @@ public class BoxController {
 		return BoxRepo.findAll();
 	}
 
-//  CREATE A BOX V
+//  CREATE A BOX V [ SELLER ]
 	@PostMapping("/box")
+	@PostAuthorize("hasAuthority('SELLER')")
     public ResponseEntity<Box> createBox(@RequestBody Box e) {
 
 		BoxRepo.save(e);
@@ -63,14 +65,16 @@ public class BoxController {
 		BoxRepo.deleteById(colid);
     }
 	
-	//GET A BOX BY ID V
+	//GET A BOX BY ID V [DELIVERYMAN]
 		@GetMapping("/box/{id}")
+		@PostAuthorize("hasAuthority('DELIVERY_MAN')")
 	    public Optional<Box> getBoxViaId(@PathVariable(value = "id") long colid){
 
 			return BoxRepo.findById(colid);
 	    }
-		//UPDATE STATUS FOR A BOX V
+		//UPDATE STATUS FOR A BOX V [DELIVERY MAN]
 		@PutMapping("/box/us/{id}")
+		@PostAuthorize("hasAuthority('DELIVERY_MAN')")
 		public void updateBox(@PathVariable(value = "id" ) long colisid, @RequestBody Box ColisDetails) {
 			
 		
@@ -86,8 +90,9 @@ public class BoxController {
 		
 		} 
 		}
-		//UPDATE DELIVERY MAN Via id
+		//UPDATE DELIVERY MAN Via id [DELIVERYMAN]
 		@PutMapping("/box/ud/{id}/{id_d}")
+		@PostAuthorize("hasAuthority('DELIVERY_MAN')")
 		public String updatedeBox(@PathVariable(value = "id" ) long colisid,@PathVariable(value = "id_d" ) long deleveryid) {
 
 
@@ -112,8 +117,9 @@ public class BoxController {
 
 
 		}
-	//UPDATE BOX CUSTOMER ID V
+	//UPDATE BOX CUSTOMER ID V [SELLER]
 	@PutMapping("/box/uc/{id}/{id_c}")
+	@PostAuthorize("hasAuthority('SELLER')")
 	public String updatecuBox(@PathVariable(value = "id" ) long colisid,@PathVariable(value = "id_c" ) long customerid) {
 
 
@@ -139,14 +145,15 @@ public class BoxController {
 		
 		
 
-		//FIND A BOX BY Code
+		//FIND A BOX BY Code [ANY]
 		@GetMapping("/box/ref/{code}")
 	    public Box getColistViaId(@PathVariable(value = "code") String colcode){
 
 			return BoxRepo.findByCode(colcode);
 	    }
-    // Get all  pending Boxes V
+    // Get all  pending Boxes V [DELIVERY_MAN] V
     @GetMapping("/pendingboxes")
+	@PostAuthorize("hasAuthority('DELIVERY_MAN')")
     public List<Box> getAllpendingBoxes() {
         List<Box> a;
        a = BoxRepo.findAll();

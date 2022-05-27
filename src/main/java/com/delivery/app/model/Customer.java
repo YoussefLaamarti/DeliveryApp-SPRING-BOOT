@@ -20,8 +20,8 @@ public class Customer extends Person{
     public Customer() {
     }
 
-    public Customer(Long id, String username, String password, String first_name, String last_name, String email, String phone_number, Collection<Box> pack) {
-        super(id, username, password, first_name, last_name, email, phone_number);
+    public Customer(Long id, String username, String password, String first_name, String last_name, String email, String phone_number, Collection<Box> pack,ROLE role) {
+        super(id, username, password, first_name, last_name, email, phone_number,role);
         this.pack = pack;
     }
 

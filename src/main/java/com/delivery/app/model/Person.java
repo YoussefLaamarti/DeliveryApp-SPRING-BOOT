@@ -21,12 +21,13 @@ public abstract class Person {
     private String last_name;
     private String email;
     private String phone_number;
+    private ROLE role;
 
 
     public Person() {
     }
 
-    public Person(Long id, String username, String password, String first_name, String last_name, String email, String phone_number) {
+    public Person(Long id, String username, String password, String first_name, String last_name, String email, String phone_number, ROLE role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -34,6 +35,7 @@ public abstract class Person {
         this.last_name = last_name;
         this.email = email;
         this.phone_number = phone_number;
+        this.role = role;
     }
 
     public Long getId() {
@@ -92,9 +94,11 @@ public abstract class Person {
         this.phone_number = phone_number;
     }
 
+    public ROLE getRole() {
+        return role;
+    }
 
-
-
-
-
+    public void setRole(ROLE role) {
+        this.role = role;
+    }
 }

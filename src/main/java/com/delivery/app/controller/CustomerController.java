@@ -1,15 +1,13 @@
 package com.delivery.app.controller;
 
-import com.delivery.app.model.Box;
-import com.delivery.app.model.Customer;
-import com.delivery.app.model.Delivery_man;
-import com.delivery.app.model.Person;
+import com.delivery.app.model.*;
 import com.delivery.app.repository.CustomerRepository;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,39 +28,45 @@ public class CustomerController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    //Get all Customers
+    //Get all Customers [SELLER]
     @GetMapping("/customers")
+    @PostAuthorize("hasAuthority('SELLER')")
     public List<Customer> getAllCustomers() {
 
         return CustomerRepo.findAll();
     }
 
 
-    //Create
+    //Create customer [SELLER]
     @PostMapping("/customer")
+    @PostAuthorize("hasAuthority('SELLER')")
     public void createCustomer(@RequestBody Customer e) throws IOException {
         String RandomPwd = randomizer();
         String HashedPwd = passwordEncoder.encode(RandomPwd);
         e.setPassword(HashedPwd);
         this.emailsender(RandomPwd);
+        e.setRole(ROLE.CUSTOMER);
         CustomerRepo.save(e);
     }
-    //Find by Id
+    //Find by Id [SELLER]
     @GetMapping("/customer/{id}")
+    @PostAuthorize("hasAuthority('SELLER')")
     public Optional<Customer> getCustomerviaId(@PathVariable(value = "id") long custid){
 
         return CustomerRepo.findById(custid);
     }
-    //Find By Email
+    //Find By Email [SELLER]
     @GetMapping("/customer/c/{email}")
+    @PostAuthorize("hasAuthority('SELLER')")
     public List<Customer> getCustomerViaEmail(@PathVariable(value = "email") String mail){
 
         return CustomerRepo.findByEmail(mail);
 
 
     }
-    //Find only Box related to this Customer
+    //Find only Box related to this Customer [CUSTOMER]
     @GetMapping("/customer/id/{id}")
+    @PostAuthorize("hasAuthority('CUSTOMER')")
     public Collection<Box> pwdCustomer(@PathVariable(value = "id" ) long custid) {
 
         Collection<Box> a = null ;
