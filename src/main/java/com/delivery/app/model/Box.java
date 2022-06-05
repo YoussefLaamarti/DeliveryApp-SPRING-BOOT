@@ -16,8 +16,13 @@ public class Box {
     private long id;
     private String package_name;
 
-    private String code = UUID.randomUUID().toString();;
+    private String code = UUID.randomUUID().toString();
     private STATE status = STATE.NOT_YET_DELIVERED;
+    private Date date;
+    private String city;
+    private String zipcode;
+    private String street;
+
 
 
     @ManyToOne
@@ -33,10 +38,15 @@ public class Box {
     public Box() {
     }
 
-    public Box(String package_name, String code, STATE status,  Customer customer, Delivery_man delivery_man) {
+    public Box(long id, String package_name, String code, STATE status, Date date, String city, String zipcode, String street, Customer customer, Delivery_man delivery_man) {
+        this.id = id;
         this.package_name = package_name;
         this.code = code;
         this.status = status;
+        this.date = date;
+        this.city = city;
+        this.zipcode = zipcode;
+        this.street = street;
         this.customer = customer;
         this.delivery_man = delivery_man;
     }
@@ -73,7 +83,37 @@ public class Box {
         this.status = status;
     }
 
+    public Date getDate() {
+        return date;
+    }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
     public Customer getCustomer() {
         return customer;
@@ -82,7 +122,6 @@ public class Box {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
-
 
     public Delivery_man getDelivery_man() {
         return delivery_man;

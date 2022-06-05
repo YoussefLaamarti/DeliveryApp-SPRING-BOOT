@@ -1,5 +1,6 @@
 package com.delivery.app.controller;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,13 +66,15 @@ public class BoxController {
 		BoxRepo.deleteById(colid);
     }
 	
-	//GET A BOX BY ID V [DELIVERYMAN]
+	/*GET A BOX BY ID V [DELIVERYMAN]
 		@GetMapping("/box/{id}")
 		@PostAuthorize("hasAuthority('DELIVERY_MAN')")
 	    public Optional<Box> getBoxViaId(@PathVariable(value = "id") long colid){
 
 			return BoxRepo.findById(colid);
 	    }
+	    */
+
 		//UPDATE STATUS FOR A BOX V [DELIVERY MAN]
 		@PutMapping("/box/us/{id}")
 		@PostAuthorize("hasAuthority('DELIVERY_MAN')")
@@ -85,6 +88,11 @@ public class BoxController {
 			Box o = c.get();
 			
 			o.setStatus(ColisDetails.getStatus());
+
+			if(o.getStatus().toString() == "DELIVERED"){
+
+				o.setDate(new Date());
+			}
 			
 			BoxRepo.save(o);
 		

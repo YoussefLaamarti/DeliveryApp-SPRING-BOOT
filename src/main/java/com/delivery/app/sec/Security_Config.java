@@ -4,15 +4,20 @@ import com.delivery.app.model.Person;
 import com.delivery.app.sec.filters.JwtAuthenticationFilter;
 import com.delivery.app.sec.filters.JwtAuthorizationFilter;
 import com.delivery.app.service.AccountService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -21,8 +26,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -32,6 +47,8 @@ import java.util.Collection;
 public class Security_Config extends WebSecurityConfigurerAdapter {
     @Autowired
     private AccountService ac;
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -47,6 +64,7 @@ public class Security_Config extends WebSecurityConfigurerAdapter {
                 return new User(person.getUsername(),person.getPassword(),authorities);
             }
         });
+
     }
 
     @Override
@@ -54,8 +72,8 @@ public class Security_Config extends WebSecurityConfigurerAdapter {
     {
         security.csrf().disable();
         security.httpBasic().disable();
-       // security.formLogin();
-        security.authorizeRequests().antMatchers("/box/ref/**").permitAll();
+       // security.formLogin();  /boxes to permit just to test
+        security.authorizeRequests().antMatchers("/box/ref/**","/login/**").permitAll();
 
         security.authorizeRequests().anyRequest().authenticated();
         security.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -63,9 +81,18 @@ public class Security_Config extends WebSecurityConfigurerAdapter {
         security.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
+
+
+
+
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+
+
+
 }

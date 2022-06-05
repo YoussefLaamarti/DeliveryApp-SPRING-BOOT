@@ -47,18 +47,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Algorithm algo1=Algorithm.HMAC256("secretkey777");
         String jwtAccessToken= JWT.create()
                 .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis()+5*60*1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis()+1200*60*1000))
                                 .withIssuer(request.getRequestURL().toString())
                                         .withClaim("roles",user.getAuthorities().stream().map(ga->ga.getAuthority()).collect(Collectors.toList()))
                                                 .sign(algo1);
-        String jwtRefreshToken= JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis()+15*60*1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algo1);
+
         Map<String,String> idToken=new HashMap<>();
         idToken.put("access-token",jwtAccessToken);
-        idToken.put("refresh-token",jwtRefreshToken);
+
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(),idToken);
 
