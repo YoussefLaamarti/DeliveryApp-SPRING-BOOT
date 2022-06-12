@@ -44,7 +44,9 @@ public class CustomerController {
         String RandomPwd = randomizer();
         String HashedPwd = passwordEncoder.encode(RandomPwd);
         e.setPassword(HashedPwd);
-        this.emailsender(RandomPwd);
+        String email = e.getEmail();
+        String user = e.getUsername();
+        this.emailsender(email,RandomPwd,user);
         e.setRole(ROLE.CUSTOMER);
         CustomerRepo.save(e);
     }
@@ -64,29 +66,27 @@ public class CustomerController {
 
 
     }
+
     //Find only Box related to this Customer [CUSTOMER]
-    @GetMapping("/customer/id/{id}")
+    @GetMapping("/customer/user/{username}")
     @PostAuthorize("hasAuthority('CUSTOMER')")
-    public Collection<Box> pwdCustomer(@PathVariable(value = "id" ) long custid) {
+    public Collection<Box> pwdCustomer(@PathVariable(value = "username" ) String custuu) {
 
         Collection<Box> a = null ;
-        Optional<Customer> c = CustomerRepo.findById(custid);
-        if(c.isPresent()) {
+        Customer c = (Customer) CustomerRepo.findByUsername(custuu);
 
-            Customer o = c.get();
+            a =  c.getPack();
 
-            a =  o.getPack();
-        }
         return a;
     }
 
-    public void emailsender(String em) throws IOException {
+    public void emailsender(String em, String rnd, String usr) throws IOException {
         OkHttpClient client = new OkHttpClient();
 
         MediaType mediaType = MediaType.parse("application/json");
-        String template = "{\r\n    \"personalizations\": [\r\n        {\r\n            \"to\": [\r\n                {\r\n                    \"email\": \"zqdiac12022@gmail.com\"\r\n                }\r\n            ],\r\n            \"subject\": \"DeliveryApp login\"\r\n        }\r\n    ],\r\n    \"from\": {\r\n        \"email\": \"DeliveryTeam@Support.com\"\r\n    },\r\n    \"content\": [\r\n        {\r\n            \"type\": \"text/html\",\r\n            \"value\": \"password : <h1> %s </h1>\"\r\n        }\r\n    ]\r\n}";
+        String template = "{\r\n    \"personalizations\": [\r\n        {\r\n            \"to\": [\r\n                {\r\n                    \"email\": \"%s\"\r\n                }\r\n            ],\r\n            \"subject\": \"DeliveryApp login\"\r\n        }\r\n    ],\r\n    \"from\": {\r\n        \"email\": \"DeliveryTeam@Support.com\"\r\n    },\r\n    \"content\": [\r\n        {\r\n            \"type\": \"text/html\",\r\n            \"value\": \"password : <h1> %s</h1> username : <h1> %s</h1>\"\r\n        }\r\n    ]\r\n}";
 
-        com.squareup.okhttp.RequestBody body = com.squareup.okhttp.RequestBody.create(mediaType, String.format(template,em));
+        com.squareup.okhttp.RequestBody body = com.squareup.okhttp.RequestBody.create(mediaType, String.format(template,em,rnd,usr));
         Request request = new Request.Builder()
                 .url("https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send")
                 .post(body)
@@ -96,6 +96,7 @@ public class CustomerController {
                 .build();
 
         Response response = client.newCall(request).execute();
+        System.out.println(em);
     }
 
     public String randomizer(){

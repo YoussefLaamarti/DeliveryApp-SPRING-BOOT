@@ -55,6 +55,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String,String> idToken=new HashMap<>();
         idToken.put("access-token",jwtAccessToken);
 
+
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(),idToken);
 

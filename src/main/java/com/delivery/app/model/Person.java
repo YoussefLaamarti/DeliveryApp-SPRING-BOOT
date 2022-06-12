@@ -14,11 +14,12 @@ public abstract class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     protected Long id;
-
+    @Column(unique=true)
     private String username;
     private String password;
     private String first_name;
     private String last_name;
+    @Column(unique=true)
     private String email;
     private String phone_number;
     private ROLE role;

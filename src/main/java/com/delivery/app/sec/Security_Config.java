@@ -75,7 +75,7 @@ public class Security_Config extends WebSecurityConfigurerAdapter {
        // security.formLogin();  /boxes to permit just to test
         security.authorizeRequests().antMatchers("/box/ref/**","/login/**").permitAll();
 
-        security.authorizeRequests().anyRequest().authenticated();
+        security.authorizeRequests().anyRequest().permitAll();
         security.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         security.addFilter(new JwtAuthenticationFilter(authenticationManagerBean()));
         security.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
