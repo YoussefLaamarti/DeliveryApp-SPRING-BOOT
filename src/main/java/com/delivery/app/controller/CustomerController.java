@@ -92,7 +92,7 @@ public class CustomerController {
                 .post(body)
                 .addHeader("content-type", "application/json")
                 .addHeader("X-RapidAPI-Host", "rapidprod-sendgrid-v1.p.rapidapi.com")
-                .addHeader("X-RapidAPI-Key", env.get("api-key-email"))
+                .addHeader("X-RapidAPI-Key", env.get(api-key-email))
                 .build();
 
         Response response = client.newCall(request).execute();
